@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const user = require("./routes/use-routes.js")
 const UserModel = require("./models/user.model.js")
+const dietRoute = require("./routes/diet-routes.js")
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
@@ -10,6 +11,8 @@ require('dotenv').config();
 
 app.use(cors())
 app.use(express.json());
+
+app.use('/diet', dietRoute);
 
 app.use('/users', user);
 
