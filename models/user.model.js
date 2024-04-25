@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     allergies:String,
     bodyFatPercentage:String,
     bodyType:String,
+    dietType:String,
     dailyBreakfast:String,
     dailyDinner:String,
     dailyLunch:String, 
@@ -29,6 +30,7 @@ const userSchema = new mongoose.Schema({
     workHours:String,
     workoutTime:String,
     isAdmin:{ type:Boolean, default:false},
+    isUser:{ type:Boolean, default:true},
     recommendedDiet:[{
          type: mongoose.Schema.Types.ObjectId, ref: 'Meal' 
         }]

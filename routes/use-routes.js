@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user.model.js")
 
 router.post('/addUser',async(req,res)=>{
+    console.log("REQ.BODY RECEIVED IS", req.body);
     const user = new User(req.body);
     await user.save();
 

@@ -22,21 +22,21 @@ app.post('/login', async (req, res) => {
 
     //NOw generating the jwt for the user with the email and isAdmin as payload
 
-    const payload = response.length!=0 && {email:response[0].email, isAdmin:response[0].isAdmin};
+    const payload = response.length!=0 && {email:response[0].email, isAdmin:response[0].isAdmin, isUser:response[0].isUser};
 
     const token = response.length!=0 && jwt.sign(payload, process.env.JWT_SECRET_ACCESS_KEY);
 
-    res.cookie('jwt',token,{
-        httpOnly: true,
-        sameSite: 'strict'
-    })
+    // res.cookie('jwt',token,{
+    //     httpOnly: true,
+    //     sameSite: 'strict'
+    // })
     
 
     if (response.length != 0) {
         res.json({
             success: true,
             message:"User login successfull",
-            isAdmin:response[0].isAdmin
+            token:token
         })
     }else{
         res.json({
