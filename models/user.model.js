@@ -31,9 +31,9 @@ const userSchema = new mongoose.Schema({
     workoutTime:String,
     isAdmin:{ type:Boolean, default:false},
     isUser:{ type:Boolean, default:true},
-    recommendedDiet:[{
-         type: mongoose.Schema.Types.ObjectId, ref: 'Meal' 
-        }]
+    recommendedDiet:{
+        type:Array
+    }
 })
 
 const Users = mongoose.model('Users', userSchema);
