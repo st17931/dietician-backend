@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/regacotz/backend/
+    - export DEPLOYPATH=/home/regacotz/public_html/
     - /bin/cp * $DEPLOYPATH
