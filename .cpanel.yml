@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/regacotz/backend/
+    - /bin/cp repositories/dietician-backend/ $DEPLOYPATH
