@@ -29,10 +29,6 @@ const userSchema = new mongoose.Schema({
     weight:String,
     workHours:String,
     workoutTime:String,
-    image: { 
-        imageName: String,
-        imageData: Buffer
-      },
     isAdmin:{ type:Boolean, default:false},
     isUser:{ type:Boolean, default:true},
     recommendedDiet:{

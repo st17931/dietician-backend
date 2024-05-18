@@ -1,8 +1,10 @@
 const express = require("express");
 const isAuthenticated = require("../middleware/auth.js")
 const router = express.Router();
+const image = require("../models/image.js");
 const singleUpload = require("../middleware/singleUpload.js")
-const User = require("../models/user.model.js")
+const User = require("../models/user.model.js");
+const Image = require("../models/image.js");
 
 router.post('/addUser',async(req,res)=>{
     console.log("REQ.BODY RECEIVED IS", req.body);
@@ -17,11 +19,9 @@ router.post('/addUser',async(req,res)=>{
 });
 
 router.post('/uploadpic', async (req, res) => {
-    console.log(req.body);
     try {
-        let image;
-        let {diet} = req.body;
         const userId = req.body.email; 
+        let image;
             // Use singleUpload middleware to handle file upload
             singleUpload(req, res, async (err) => {
               if (err) {
@@ -34,18 +34,22 @@ router.post('/uploadpic', async (req, res) => {
                     imageData: buffer
                     };
                 }
-                console.log("image",image);
             })
-        const user = await User.findOneAndUpdate({email:"satyam@gmail.com"}, {image:image}, { new: true });
-
+            
+        const user = await User.findOne({email:userId});
         if (!user) {
-            return res.status(404).json({
+            return res.status(200).json({
                 success: false,
                 message: "User not found"
             });
         }
-
-        await user.save();
+        const userImage=await Image.findOne({user:userId})
+        if(userImage){
+            userImage.images.push(image);
+        } else {
+            await Image.create({user:userId, images:image});
+        }
+        await userImage.save();
 
         res.json({
             success: true,
