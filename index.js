@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const app = require("./app.js")
-
-
+require('dotenv').config();
+const port=process.env.PORT
+const mongodb=process.env.MONGO_DB
 async function connectDb(){
-    await mongoose.connect("mongodb+srv://st17931:St17931@cluster0.qtv4gie.mongodb.net/dieticianDb?retryWrites=true&w=majority&appName=Cluster0");
-    app.listen(3000, () => {
-    console.log(`Example app listening on port ${3000}`)
+    await mongoose.connect(mongodb);
+    app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
   })
 }
 

@@ -4,7 +4,6 @@ const app = express();
 const user = require("./routes/use-routes.js")
 const dietRoute = require("./routes/diet-routes.js")
 const verifyLogin =require("./routes/verifyLogin.js")
-require('dotenv').config();
 
 const cookieParser = require('cookie-parser');
 

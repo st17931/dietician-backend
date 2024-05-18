@@ -7,14 +7,21 @@ const User = require("../models/user.model.js");
 const Image = require("../models/image.js");
 
 router.post('/addUser',async(req,res)=>{
-    console.log("REQ.BODY RECEIVED IS", req.body);
-    const user = new User(req.body);
-    await user.save();
-
-    res.json({
-        success:true,
-        message:"user data is saved"
-    })
+    try{
+        console.log("REQ.BODY RECEIVED IS", req.body);
+        const user = new User(req.body);
+        await user.save();
+    
+        res.json({
+            success:true,
+            message:"user data is saved"
+        })
+    } catch(e){
+        res.json({
+            success:false,
+            message:"user already exists"
+        })
+    }
 
 });
 
@@ -102,7 +109,7 @@ router.post('/getUserDiet', async (req, res) => {
         const user = await User.findOne({email:userId});
 
         if (!user) {
-            return res.status(404).json({
+            return res.status(204).json({
                 success: false,
                 message: "User not found"
             });
@@ -113,7 +120,7 @@ router.post('/getUserDiet', async (req, res) => {
 
         res.json({
             success: true,
-            message: "User data is saved",
+            message: " deit is added",
             data:user.recommendedDiet
         });
     } catch (error) {
