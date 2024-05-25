@@ -27,25 +27,11 @@ router.post('/addUser',async(req,res)=>{
 
 router.post('/uploadpic', async (req, res) => {
     try {
+        singleUpload(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message });
+        }
         const userId = JSON.parse(req.body.email); 
-
-            singleUpload(req, res, async (err) => {
-              if (err) {
-                return res.status(400).json({ message: err.message });
-              }
-              const { originalname, buffer, mimetype } = req.file || {};
-                if (originalname && buffer && mimetype) {
-                    const image = new Image({
-                        name: req.file.originalname,
-                        images: {
-                            data: req.file.buffer,
-                            contentType: req.file.mimetype
-                        }
-                    });
-                    await image.save();
-                }
-            })
-            
         const user = await User.findOne({email:userId});
         if (!user) {
             return res.status(200).json({
@@ -53,18 +39,28 @@ router.post('/uploadpic', async (req, res) => {
                 message: "User not found"
             });
         }
-        // const userImage=await Image.findOne({user:userId})
-        // if(userImage){
-        //     userImage.images.push(image);
-        //     await userImage.save();
-        // } else {
-        //     await Image.create({user:userId, images:image});
-        // }
-        
+        const { originalname, buffer, mimetype } = req.file || {};
+        if (originalname && buffer && mimetype) {
+            const image = {
+                name: originalname,
+                img: {
+                    data: buffer,
+                    contentType: mimetype
+                }
+            };
+            const userImage = await Image.findOne({ user: userId });
+            if (userImage) {
+                userImage.images.push(image);
+                await userImage.save();
+            } else {
+                await Image.create({ user: userId, images: [image] });
+            }
+        }
         res.json({
             success: true,
             message: "User data is saved"
         });
+    })
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -75,14 +71,12 @@ router.post('/uploadpic', async (req, res) => {
 });
 router.post('/getUsersPic', async (req, res) => {
     try {
-        const userId = req.body.name; 
+        const {email} = req.body.email; 
         console.log(req.body);
-        const userImage=await Image.findOne({name:userId})
-        // res.set('Content-Type', userImage.images.contentType);
-        // res.send(userImage.images.data);
+        const userImage=await Image.findOne({User:email})
         res.json({
-            contentType: userImage.images.contentType,
-            imageData: userImage.images.data.toString('base64')
+            success: true,
+            data: userImage.images
         });
     } catch (error) {
         console.error(error);
