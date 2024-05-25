@@ -27,19 +27,22 @@ router.post('/addUser',async(req,res)=>{
 
 router.post('/uploadpic', async (req, res) => {
     try {
-        const userId = req.body.email; 
-        let image;
-            // Use singleUpload middleware to handle file upload
+        const userId = JSON.parse(req.body.email); 
+
             singleUpload(req, res, async (err) => {
               if (err) {
                 return res.status(400).json({ message: err.message });
               }
-              const { originalname, buffer } = req.file || {};
-                if (originalname && buffer) {
-                    image = {
-                    imageName: originalname,
-                    imageData: buffer
-                    };
+              const { originalname, buffer, mimetype } = req.file || {};
+                if (originalname && buffer && mimetype) {
+                    const image = new Image({
+                        name: req.file.originalname,
+                        images: {
+                            data: req.file.buffer,
+                            contentType: req.file.mimetype
+                        }
+                    });
+                    await image.save();
                 }
             })
             
@@ -50,17 +53,36 @@ router.post('/uploadpic', async (req, res) => {
                 message: "User not found"
             });
         }
-        const userImage=await Image.findOne({user:userId})
-        if(userImage){
-            userImage.images.push(image);
-        } else {
-            await Image.create({user:userId, images:image});
-        }
-        await userImage.save();
-
+        // const userImage=await Image.findOne({user:userId})
+        // if(userImage){
+        //     userImage.images.push(image);
+        //     await userImage.save();
+        // } else {
+        //     await Image.create({user:userId, images:image});
+        // }
+        
         res.json({
             success: true,
             message: "User data is saved"
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+});
+router.post('/getUsersPic', async (req, res) => {
+    try {
+        const userId = req.body.name; 
+        console.log(req.body);
+        const userImage=await Image.findOne({name:userId})
+        // res.set('Content-Type', userImage.images.contentType);
+        // res.send(userImage.images.data);
+        res.json({
+            contentType: userImage.images.contentType,
+            imageData: userImage.images.data.toString('base64')
         });
     } catch (error) {
         console.error(error);
@@ -120,7 +142,7 @@ router.post('/getUserDiet', async (req, res) => {
 
         res.json({
             success: true,
-            message: " deit is added",
+            message: "success",
             data:user.recommendedDiet
         });
     } catch (error) {

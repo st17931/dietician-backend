@@ -6,10 +6,11 @@ const imageShema = new mongoose.Schema({
         type:String,
         unique:true
     },
-    images:[{
-    imageName: String,
-    imageData: String
-}]
+    name: String,
+    images: {
+        data: Buffer,
+        contentType: String
+    }
 })
 
 const Image = mongoose.model('Image', imageShema);

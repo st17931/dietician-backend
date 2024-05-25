@@ -6,14 +6,12 @@ const dietRoute = require("./routes/diet-routes.js")
 const verifyLogin =require("./routes/verifyLogin.js")
 
 const cookieParser = require('cookie-parser');
-
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser('thisissomesecret'));
 
 app.use(cors())
 app.use(express.json());
-
 app.use('/diet', dietRoute);
-
 app.use('/users', user);
 
 app.post('/login', verifyLogin)
