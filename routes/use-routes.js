@@ -71,7 +71,7 @@ router.post('/uploadpic', async (req, res) => {
 });
 router.post('/getUsersPic', async (req, res) => {
     try {
-        const {email} = req.body.email; 
+        const {email} = req.body; 
         console.log(req.body);
         const userImage=await Image.findOne({User:email})
         res.json({
