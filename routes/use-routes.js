@@ -1,11 +1,53 @@
 const express = require("express");
 const isAuthenticated = require("../middleware/auth.js")
 const router = express.Router();
-const image = require("../models/image.js");
+const ProfilePic = require('../models/user.profile.js')
 const singleUpload = require("../middleware/singleUpload.js")
 const User = require("../models/user.model.js");
 const Image = require("../models/image.js");
 
+router.post('/addProfilePic', async (req, res) => {
+    try {
+        singleUpload(req, res, async (err) => {
+        const user = JSON.parse(req.body.email); 
+        const imgName = req.file.originalname;
+        const img = {
+            data: req.file.buffer,
+            contentType: req.file.mimetype,
+        };
+        const userImage = await ProfilePic.findOne({ user });
+        if (userImage) {
+            await ProfilePic.findOneAndUpdate({user},{ imgName, img})
+            await userImage.save();
+        } else {
+            const newProfilePic = new ProfilePic({ user, imgName, img });
+            await newProfilePic.save();
+        }
+        res.status(201).json({success:true, message: 'Profile picture uploaded successfully' });
+    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({success:false, error: 'An error occurred while uploading the profile picture' });
+    }
+});
+
+// GET route to fetch a profile picture by user
+router.post('/getProfilePic', async (req, res) => {
+    try {
+        const user = JSON.parse(req.body.email); 
+        const profilePic = await ProfilePic.findOne({ user });
+
+        if (!profilePic) {
+            return res.status(404).json({ error: 'Profile picture not found' });
+        }
+
+        res.contentType(profilePic.img.contentType);
+        res.send(profilePic.img.data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching the profile picture' });
+    }
+});
 router.post('/addUser',async(req,res)=>{
     try{
         console.log("REQ.BODY RECEIVED IS", req.body);
