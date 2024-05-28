@@ -34,15 +34,14 @@ router.post('/addProfilePic', async (req, res) => {
 // GET route to fetch a profile picture by user
 router.post('/getProfilePic', async (req, res) => {
     try {
-        const user = JSON.parse(req.body.email); 
+        const user =req.body.email;
+        console.log(user);
         const profilePic = await ProfilePic.findOne({ user });
 
         if (!profilePic) {
             return res.status(404).json({ error: 'Profile picture not found' });
         }
-
-        res.contentType(profilePic.img.contentType);
-        res.send(profilePic.img.data);
+        res.status(200).json({"success": true, data: profilePic.img})
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while fetching the profile picture' });
