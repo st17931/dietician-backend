@@ -73,6 +73,7 @@ router.post('/uploadpic', async (req, res) => {
             return res.status(400).json({ message: err.message });
         }
         const userId = JSON.parse(req.body.email); 
+        const weight = JSON.parse(req.body.weight); 
         const user = await User.findOne({email:userId});
         if (!user) {
             return res.status(200).json({
@@ -87,7 +88,8 @@ router.post('/uploadpic', async (req, res) => {
                 img: {
                     data: buffer,
                     contentType: mimetype
-                }
+                },
+                weight
             };
             const userImage = await Image.findOne({ user: userId });
             if (userImage) {

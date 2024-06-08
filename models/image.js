@@ -7,6 +7,7 @@ const imageShema = new mongoose.Schema({
         unique:true
     },
     images:[{
+        weight: Number,
         name: String,
         img: {
             data: Buffer,
@@ -16,6 +17,6 @@ const imageShema = new mongoose.Schema({
     }]
 })
 
-const Image = mongoose.model('Image', imageShema);
+const Image = mongoose.model('Progress', imageShema);
 
 module.exports = Image;

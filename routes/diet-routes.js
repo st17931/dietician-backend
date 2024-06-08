@@ -14,8 +14,7 @@ router.post('/addMeal',async(req,res)=>{
 });
 
 router.get('/getMeal', async(req,res)=>{
-    const {meal_type}=req.query;
-        const allMeal = await Meal.find({meal_type: meal_type}).exec();
+        const allMeal = await Meal.find({}).exec();
         res.json({
             success: true,
             data:allMeal
