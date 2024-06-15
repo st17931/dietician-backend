@@ -4,7 +4,7 @@ const router = express.Router();
 const ProfilePic = require('../models/user.profile.js')
 const singleUpload = require("../middleware/singleUpload.js")
 const User = require("../models/user.model.js");
-const Image = require("../models/image.js");
+const Progress = require("../models/progress.js")
 
 router.post('/addProfilePic', async (req, res) => {
     try {
@@ -91,12 +91,12 @@ router.post('/uploadpic', async (req, res) => {
                 },
                 weight
             };
-            const userImage = await Image.findOne({ user: userId });
+            const userImage = await Progress.findOne({ user: userId });
             if (userImage) {
                 userImage.images.push(image);
                 await userImage.save();
             } else {
-                await Image.create({ user: userId, images: [image] });
+                await Progress.create({ user: userId, images: [image] });
             }
         }
         res.json({
@@ -116,10 +116,30 @@ router.post('/getUsersPic', async (req, res) => {
     try {
         const {email} = req.body; 
         console.log(req.body);
-        const userImage=await Image.findOne({User:email})
+        const userImage=await Progress.findOne({User:email})
         res.json({
             success: true,
             data: userImage.images
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+});
+router.post('/getProgressWeight', async (req, res) => {
+    try {
+        const {email} = req.body; 
+        const userImage=await Progress.findOne({user:email});
+        let weight=[];
+        userImage.images.filter((data)=>{
+            weight.push(data.weight);
+        })
+        res.json({
+            success: true,
+            data: weight
         });
     } catch (error) {
         console.error(error);

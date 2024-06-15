@@ -17,6 +17,6 @@ const imageShema = new mongoose.Schema({
     }]
 })
 
-const Image = mongoose.model('Progress', imageShema);
+const Progress = mongoose.model('Progress', imageShema);
 
-module.exports = Image;
+module.exports = Progress;
