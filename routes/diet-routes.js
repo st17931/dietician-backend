@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Meal = require("../models/diet.model.js")
 
+//Adding comment for random commit so that i can push
+
 router.post('/addMeal',async(req,res)=>{
     const meal = new Meal(req.body);
     await meal.save();
